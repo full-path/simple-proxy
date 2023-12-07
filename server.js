@@ -1,24 +1,15 @@
-const https = require('https');
+const http = require('http');
 const httpProxy = require('http-proxy');
-const fs = require('fs');
 const url = require('url');
 
 // Fetching values from environment variables or providing defaults
-const targetURL = process.env.TARGET_URL;
-const keyFilePath = process.env.KEY_FILE_PATH || 'valid-ssl-key.pem';
-const certFilePath = process.env.CERT_FILE_PATH || 'valid-ssl-cert.pem';
-
-const credentials = {
-    key: fs.readFileSync(keyFilePath, 'utf8'),
-    cert: fs.readFileSync(certFilePath, 'utf8')
-};
+const targetURL = process.env.TARGET_URL || "https://script.google.com/macros/s/AKfycbyIvgq7xgFFY-6l2qE9dLrTZdByG6fnFzsHOSxQhrJyht21PsgE5nWOmt_jnHgVro9_/exec";
 
 const proxy = httpProxy.createProxyServer({
-    ssl: credentials,
     secure: true
 });
 
-const httpsServer = https.createServer(credentials, function(req, res) {
+const httpServer = http.createServer(function(req, res) {
     console.log('Request', req.method, req.url);
 
     const parsedUrl = url.parse(req.url);
@@ -37,8 +28,8 @@ const httpsServer = https.createServer(credentials, function(req, res) {
 
 const PORT = process.env.PORT || 3000;
 
-httpsServer.listen(PORT, () => {
-    console.log(`HTTPS server running on port ${PORT}`);
+httpServer.listen(PORT, () => {
+    console.log(`HTTP server running on port ${PORT}`);
 });
 
 
