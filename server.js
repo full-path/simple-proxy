@@ -1,13 +1,18 @@
 const http = require('http');
+const https = require('https');
 const httpProxy = require('http-proxy');
 const url = require('url');
 
 // Fetching values from environment variables or providing defaults
-const targetURL = process.env.TARGET_URL || "https://script.google.com/macros/s/AKfycbyIvgq7xgFFY-6l2qE9dLrTZdByG6fnFzsHOSxQhrJyht21PsgE5nWOmt_jnHgVro9_/exec";
+const targetURL = process.env.TARGET_URL
 
 const proxy = httpProxy.createProxyServer({
     secure: true
 });
+
+const httpsAgent = new https.Agent({
+  rejectUnauthorized: true
+})
 
 const httpServer = http.createServer(function(req, res) {
     console.log('Request', req.method, req.url);
@@ -21,6 +26,7 @@ const httpServer = http.createServer(function(req, res) {
         'X-Original-URL': targetWithParams
     });
 
+    console.log('targetURL', targetURL)
     proxy.web(req, res, { target: targetURL, headers: headers }, function(e) {
         console.log(e);
     });
