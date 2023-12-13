@@ -31,6 +31,7 @@ app.all('*', async (req, res) => {
     // Send back the response from the target API
     res.status(targetResponse.status).send(targetResponse.data);
   } catch (error) {
+    console.log(error)
     res.status(500).send({ error: 'Internal Server Error' });
   }
 });
