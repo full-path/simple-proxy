@@ -26,7 +26,7 @@ const httpServer = http.createServer(function(req, res) {
     proxy.web(req, res, {
       target: targetURL,
       headers: headers,
-      rejectUnauthorized: false
+      changeOrigin: true
     }, function(e) {
         console.log(e);
     });
