@@ -7,7 +7,7 @@ const TARGET_URL = process.env.TARGET_URL
 
 app.use(express.json());
 
-app.post('*', async (req, res) => {
+app.all('*', async (req, res) => {
   try {
     const { query, headers, method, originalUrl, body } = req;
 
