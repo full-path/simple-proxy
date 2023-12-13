@@ -10,10 +10,6 @@ const proxy = httpProxy.createProxyServer({
     secure: true
 });
 
-const httpsAgent = new https.Agent({
-  rejectUnauthorized: true
-})
-
 const httpServer = http.createServer(function(req, res) {
     console.log('Request', req.method, req.url);
 
@@ -30,7 +26,7 @@ const httpServer = http.createServer(function(req, res) {
     proxy.web(req, res, {
       target: targetURL,
       headers: headers,
-      changeOrigin: true
+      rejectUnauthorized: false
     }, function(e) {
         console.log(e);
     });
