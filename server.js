@@ -11,12 +11,7 @@ app.all('*', async (req, res) => {
   try {
     const { query, headers, method, originalUrl, body } = req;
 
-    // Include X-Original-URL header in the request to the target API
     const axiosConfig = {
-      headers: {
-        ...headers,
-        'X-Original-URL': originalUrl,
-      },
       method,
       data: body
     };
