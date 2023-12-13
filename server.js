@@ -1,33 +1,36 @@
-const http = require('http');
-const httpProxy = require('http-proxy');
-const url = require('url');
+const express = require('express');
+const axios = require('axios');
 
-// Fetching values from environment variables or providing defaults
-const targetURL = process.env.TARGET_URL;
+const app = express();
+const PORT = process.env.PORT || 3000;
+const TARGET_URL = process.env.TARGET_URL
 
-const proxy = httpProxy.createProxyServer({});
+app.use(express.json());
 
-const httpServer = http.createServer(function(req, res) {
-    console.log('Request', req.method, req.url);
+app.post('*', async (req, res) => {
+  try {
+    const { query, headers } = req;
+    const originalUrl = req.originalUrl;
 
-    const parsedUrl = url.parse(req.url);
-    const pathWithQuery = parsedUrl.path; // Includes path and query parameters
+    // Include X-Original-URL header in the request to the target API
+    const axiosConfig = {
+      headers: {
+        ...headers,
+        'X-Original-URL': originalUrl,
+      },
+    };
 
-    const targetWithParams = targetURL + pathWithQuery;
+    const targetResponse = await axios.post(`${TARGET_URL}${originalUrl}`, query, axiosConfig);
 
-    const headers = Object.assign({}, req.headers, {
-        'X-Original-URL': targetWithParams
-    });
-
-    proxy.web(req, res, { target: targetURL, headers: headers }, function(e) {
-        console.log(e);
-    });
+    // Send back the response from the target API
+    res.status(targetResponse.status).send(targetResponse.data);
+  } catch (error) {
+    res.status(500).send({ error: 'Internal Server Error' });
+  }
 });
 
-const PORT = process.env.PORT || 3000;
-
-httpServer.listen(PORT, () => {
-    console.log(`HTTP server running on port ${PORT}`);
+app.listen(PORT, () => {
+  console.log(`Server is running on port ${PORT}`);
 });
 
 
