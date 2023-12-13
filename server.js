@@ -25,6 +25,9 @@ app.all('*', async (req, res) => {
 
     const targetResponse = await axios(`${TARGET_URL}${originalUrl}`, axiosConfig);
 
+    console.log('Target Response');
+    console.log(targetResponse)
+
     // Send back the response from the target API
     res.status(targetResponse.status).send(targetResponse.data);
   } catch (error) {
