@@ -9,8 +9,7 @@ app.use(express.json());
 
 app.post('*', async (req, res) => {
   try {
-    const { query, headers } = req;
-    const originalUrl = req.originalUrl;
+    const { query, headers, method, originalUrl, body } = req;
 
     // Include X-Original-URL header in the request to the target API
     const axiosConfig = {
@@ -18,9 +17,13 @@ app.post('*', async (req, res) => {
         ...headers,
         'X-Original-URL': originalUrl,
       },
+      method,
+      data: body
     };
 
-    const targetResponse = await axios.post(`${TARGET_URL}${originalUrl}`, query, axiosConfig);
+    console.log(axiosConfig);
+
+    const targetResponse = await axios(`${TARGET_URL}`, query, axiosConfig);
 
     // Send back the response from the target API
     res.status(targetResponse.status).send(targetResponse.data);
