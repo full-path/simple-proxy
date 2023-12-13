@@ -27,7 +27,7 @@ const httpServer = http.createServer(function(req, res) {
     });
 
     console.log('targetURL', targetURL)
-    proxy.web(req, res, { target: targetURL, headers: headers }, function(e) {
+    proxy.web(req, res, { target: targetURL, headers: headers, agent: httpsAgent }, function(e) {
         console.log(e);
     });
 });
