@@ -11,6 +11,11 @@ app.all('*', async (req, res) => {
   try {
     const { query, headers, method, originalUrl, body } = req;
 
+    const queryString = new URLSearchParams(query).toString();
+
+    // Construct the URL with query parameters appended to TARGET_URL
+    const apiUrl = `${TARGET_URL}${queryString ? `?${queryString}` : ''}`;
+
     const axiosConfig = {
       method,
       data: body
@@ -18,7 +23,7 @@ app.all('*', async (req, res) => {
 
     console.log(axiosConfig);
 
-    const targetResponse = await axios(`${TARGET_URL}${originalUrl}`, axiosConfig);
+    const targetResponse = await axios(apiUrl, axiosConfig);
 
     console.log('Target Response');
     console.log(targetResponse)
