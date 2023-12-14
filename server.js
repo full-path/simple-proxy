@@ -16,20 +16,23 @@ app.all('*', async (req, res) => {
     // Construct the URL with query parameters appended to TARGET_URL
     //const apiUrl = `${TARGET_URL}${queryString ? `?${queryString}` : ''}`;
 
-    const axiosConfig = {
-      method,
-      data: body
-    };
-    
-    console.log(axiosConfig);
+    // const axiosConfig = {
+    //   method,
+    //   data: body
+    // };
 
-    const targetResponse = await axios(TARGET_URL, axiosConfig);
-
-    console.log('Target Response');
-    console.log(targetResponse);
-
-    // Send back the response from the target API
-    res.status(targetResponse.status).send(targetResponse.data);
+    // console.log(axiosConfig);
+    axios.get(TARGET_URL)
+      .then(function(targetResponse) {
+        console.log("Response:")
+        console.log(targetResponse)
+        res.status(targetResponse.status).send(targetResponse.data)
+      })
+      .catch(function(e) {
+        console.log("ERROR")
+        console.log(e)
+        res.status(500).send({ error: 'Internal Server Error' });
+      })
   } catch (error) {
     console.log(error)
     res.status(500).send({ error: 'Internal Server Error' });
