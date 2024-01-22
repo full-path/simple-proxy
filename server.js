@@ -21,6 +21,16 @@ function handleErrorResponse(res, error) {
   res.status(500).send({ error: 'Internal Server Error' });
 }
 
+function urlQueryString(params) {
+  try {
+    const keys = Object.keys(params)
+    const result = keys.map((key) => {
+      return key + "=" + encodeURIComponent(params[key])
+    }).join("&")
+    return result
+  } catch(e) { console.error('Error:', e) }
+}
+
 app.get('*', async (req, res) => {
   try {
     const { query } = req;
@@ -35,14 +45,31 @@ app.get('*', async (req, res) => {
   }
 });
 
+app.post('/v1/TripRequest', async (req, res) => {
+  try {
+    const { headers, path } = req;
+    const authorizationHeader = headers.authorization;
+
+    const params = {
+      authorization: authorizationHeader,
+      endpointPath: path,
+    };
+
+    const queryString = urlQueryString(params);
+    const apiUrl = `${TARGET_URL}?${queryString}`;
+
+    axios.post(apiUrl, req.body)
+      .then((targetResponse) => handleSuccessResponse(res, targetResponse))
+      .catch((e) => handleErrorResponse(res, e));
+  } catch (error) {
+    console.error('Error:', error);
+    res.status(500).send({ error: 'Internal Server Error' });
+  }
+});
+
 app.post('*', async (req, res) => {
   try {
-    const { query, body } = req;
-    const apiUrl = constructApiUrl(query, TARGET_URL);
-
-    axios.post(apiUrl, body)
-      .then(targetResponse => handleSuccessResponse(res, targetResponse))
-      .catch(e => handleErrorResponse(res, e));
+    res.status(400).send({ error: 'Endpoint not supported' })
   } catch (error) {
     console.error('Error:', error);
     res.status(500).send({ error: 'Internal Server Error' });
