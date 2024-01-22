@@ -55,8 +55,14 @@ app.post('/v1/TripRequest', async (req, res) => {
       endpointPath: path,
     };
 
+    console.log('REQUEST: ', req)
+
     const queryString = urlQueryString(params);
     const apiUrl = `${TARGET_URL}?${queryString}`;
+
+    console.log('PARAMS: ', params)
+
+    console.log('API_URL: ', apiUrl)
 
     axios.post(apiUrl, req.body)
       .then((targetResponse) => handleSuccessResponse(res, targetResponse))
