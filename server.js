@@ -55,14 +55,10 @@ app.post('/v1/TripRequest', async (req, res) => {
       endpointPath: path,
     };
 
-    console.log('REQUEST: ', req)
-
     const queryString = urlQueryString(params);
     const apiUrl = `${TARGET_URL}?${queryString}`;
 
-    console.log('PARAMS: ', params)
-
-    console.log('API_URL: ', apiUrl)
+    console.log('Forwarding POST on /v1/TripRequest to ', apiUrl)
 
     axios.post(apiUrl, req.body)
       .then((targetResponse) => handleSuccessResponse(res, targetResponse))
