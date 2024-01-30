@@ -45,7 +45,7 @@ app.get('*', async (req, res) => {
   }
 });
 
-app.post('/v1/TripRequest', async (req, res) => {
+async function proxyRequest(req, res) {
   try {
     const { headers, path } = req;
     const authorizationHeader = headers.authorization;
@@ -58,7 +58,7 @@ app.post('/v1/TripRequest', async (req, res) => {
     const queryString = urlQueryString(params);
     const apiUrl = `${TARGET_URL}?${queryString}`;
 
-    console.log('Forwarding POST on /v1/TripRequest to ', apiUrl)
+    console.log('Forwarding POST to ', apiUrl);
 
     axios.post(apiUrl, req.body)
       .then((targetResponse) => handleSuccessResponse(res, targetResponse))
@@ -67,6 +67,14 @@ app.post('/v1/TripRequest', async (req, res) => {
     console.error('Error:', error);
     res.status(500).send({ error: 'Internal Server Error' });
   }
+}
+
+app.post('/v1/TripRequestResponse', async (req, res) => {
+  proxyRequest(req, res);
+});
+
+app.post('/v1/TripRequest', async (req, res) => {
+  proxyRequest(req, res)
 });
 
 app.post('*', async (req, res) => {
