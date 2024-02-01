@@ -14,7 +14,13 @@ function constructApiUrl(query, baseUrl) {
 
 function handleSuccessResponse(res, targetResponse) {
   console.log(targetResponse.data)
-  res.status(targetResponse.status).send(targetResponse.data);
+  const status = targetResponse.data.status
+  if (status !== 'OK') {
+    const statusCode = parseInt(status)
+    res.status(statusCode).send(targetResponse.data);
+  } else {
+    res.status(targetResponse.status).send(targetResponse.data);
+  }
 }
 
 function handleErrorResponse(res, error) {
