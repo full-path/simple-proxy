@@ -13,6 +13,7 @@ function constructApiUrl(query, baseUrl) {
 }
 
 function handleSuccessResponse(res, targetResponse) {
+  console.log(targetResponse.data)
   res.status(targetResponse.status).send(targetResponse.data);
 }
 
@@ -74,6 +75,10 @@ app.post('/v1/TripRequestResponse', async (req, res) => {
 });
 
 app.post('/v1/TripRequest', async (req, res) => {
+  proxyRequest(req, res)
+});
+
+app.post('/v1/ClientOrderConfirmation', async (req, res) => {
   proxyRequest(req, res)
 });
 
