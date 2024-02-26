@@ -17,7 +17,11 @@ function handleSuccessResponse(res, targetResponse) {
   const status = targetResponse.data.status
   if (status !== 'OK') {
     const statusCode = parseInt(status)
-    res.status(statusCode).send(targetResponse.data);
+    if (statusCode) {
+      res.status(statusCode).send(targetResponse.data);
+    } else {
+      res.status(400).send(targetResponse.data);
+    }
   } else {
     res.status(targetResponse.status).send(targetResponse.data);
   }
@@ -85,6 +89,18 @@ app.post('/v1/TripRequest', async (req, res) => {
 });
 
 app.post('/v1/ClientOrderConfirmation', async (req, res) => {
+  proxyRequest(req, res)
+});
+
+app.post('/v1/CustomerReferral', async (req, res) => {
+  proxyRequest(req, res)
+});
+
+app.post('/v1/CustomerReferralResponse', async (req, res) => {
+  proxyRequest(req, res)
+});
+
+app.post('/v1/TripStatusChange', async (req, res) => {
   proxyRequest(req, res)
 });
 
