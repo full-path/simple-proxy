@@ -71,6 +71,8 @@ async function proxyRequest(req, res) {
 
     console.log('Forwarding POST to ', apiUrl);
 
+    console.log('Message body: ', req.body)
+
     axios.post(apiUrl, req.body)
       .then((targetResponse) => handleSuccessResponse(res, targetResponse))
       .catch((e) => handleErrorResponse(res, e));
