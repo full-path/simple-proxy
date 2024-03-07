@@ -104,6 +104,14 @@ app.post('/v1/TripStatusChange', async (req, res) => {
   proxyRequest(req, res)
 });
 
+app.post('/v1/ProviderOrderConfirmation', async (req, res) => {
+  proxyRequest(req, res)
+});
+
+app.post('/v1/TripTaskCompletion', async (req, res) => {
+  proxyRequest(req, res)
+});
+
 app.post('*', async (req, res) => {
   try {
     res.status(400).send({ error: 'Endpoint not supported' })
