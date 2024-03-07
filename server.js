@@ -5,8 +5,6 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 const TARGET_URL = process.env.TARGET_URL;
 
-app.use(express.json());
-
 function constructApiUrl(query, baseUrl) {
   const queryString = new URLSearchParams(query).toString();
   return `${baseUrl}${queryString ? `?${queryString}` : ''}`;
@@ -14,7 +12,8 @@ function constructApiUrl(query, baseUrl) {
 
 function handleSuccessResponse(res, targetResponse) {
   console.log(targetResponse.data)
-  const status = targetResponse.data.status
+  let responseData = JSON.parse(targetResponse.data)
+  const status = responseData.data.status
   if (status !== 'OK') {
     const statusCode = parseInt(status)
     if (statusCode) {
