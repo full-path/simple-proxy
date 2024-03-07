@@ -1,11 +1,12 @@
 const express = require('express');
 const axios = require('axios');
+const bodyParser = require
 
 const app = express();
 const PORT = process.env.PORT || 3000;
 const TARGET_URL = process.env.TARGET_URL;
 
-app.use(express.json());
+app.use(bodyParser.text({type:'*/*'}));
 
 function constructApiUrl(query, baseUrl) {
   const queryString = new URLSearchParams(query).toString();
@@ -14,8 +15,13 @@ function constructApiUrl(query, baseUrl) {
 
 function handleSuccessResponse(res, targetResponse) {
   console.log(targetResponse.data)
-  let responseData = JSON.parse(targetResponse.data)
-  const status = responseData.data.status
+  let status = 'OK'
+  try {
+    const responseData = JSON.parse(targetResponse)
+    status = responseData.data.status
+  } catch(e) {
+    console.log("error parsing response")
+  }
   if (status !== 'OK') {
     const statusCode = parseInt(status)
     if (statusCode) {
