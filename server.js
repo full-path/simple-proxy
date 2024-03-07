@@ -15,13 +15,12 @@ function constructApiUrl(query, baseUrl) {
 
 function handleSuccessResponse(res, targetResponse) {
   console.log(targetResponse.data)
-  let status = 'OK'
-  console.log(typeof targetResponse.data)
-  try {
+  let status
+  if (typeof targetResponse.data === 'object') {
+    status = targetResponse.data.status
+  } else {
     const responseData = JSON.parse(targetResponse)
     status = responseData.data.status
-  } catch(e) {
-    console.log("error parsing response")
   }
   if (status !== 'OK') {
     const statusCode = parseInt(status)
@@ -78,7 +77,6 @@ async function proxyRequest(req, res) {
     const apiUrl = `${TARGET_URL}?${queryString}`;
 
     console.log('Forwarding POST to ', apiUrl);
-    console.log(typeof req.body)
     console.log('Message body: ', req.body)
 
     axios.post(apiUrl, req.body)
