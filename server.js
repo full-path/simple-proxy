@@ -5,6 +5,8 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 const TARGET_URL = process.env.TARGET_URL;
 
+app.use(express.text());
+
 function constructApiUrl(query, baseUrl) {
   const queryString = new URLSearchParams(query).toString();
   return `${baseUrl}${queryString ? `?${queryString}` : ''}`;
