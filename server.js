@@ -19,8 +19,13 @@ function handleSuccessResponse(res, targetResponse) {
   if (typeof targetResponse.data === 'object') {
     status = targetResponse.data.status
   } else {
-    const responseData = JSON.parse(targetResponse)
-    status = responseData.data.status
+    try {
+      const responseData = JSON.parse(targetResponse)
+      status = responseData.data.status
+    } catch (e) {
+      res.status(400).send(targetResponse.data);
+      return
+    }
   }
   if (status !== 'OK') {
     const statusCode = parseInt(status)
